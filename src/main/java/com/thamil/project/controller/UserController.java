@@ -20,16 +20,6 @@ public class UserController {
   @Autowired
   private UserService service;
 
-  @ExceptionHandler(CustomException.class)
-  public ResponseEntity<String> exceptionHandler(CustomException e) {
-    return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
-  }
-
-  @ExceptionHandler(InternalError.class)
-  public ResponseEntity<String> handleException(Exception e) {
-    return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
-  }
-
   @PostMapping("/signUp")
   public ResponseEntity<User> insertUser(@RequestBody User user) throws CustomException {
     User u = service.saveUser(user);

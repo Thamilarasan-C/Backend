@@ -30,4 +30,5 @@ public class Event {
   @ManyToOne
   @JoinColumn(name = "organizerId", insertable = false, updatable = false)
   private User user;
+  private String status;
 }

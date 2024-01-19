@@ -19,4 +19,13 @@ public class UserService {
       throw new CustomException("Email Id already registered");
     return repo.save(user);
   }
+
+  public User updateUser(User user) throws CustomException {
+    if (user.getEmailId() == null)
+      throw new CustomException("Email Id must not be null");
+    if (repo.existsByEmailId(user.getEmailId()))
+      return repo.save(user);
+    throw new CustomException("No user found in this id");
+  }
+
 }
