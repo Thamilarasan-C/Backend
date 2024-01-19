@@ -14,10 +14,14 @@ public class RegistrationService {
 
   @Autowired
   private RegistrationRepo repo;
+  
+  @Autowired 
+  private TicketDetailsService ticketDetailsService;
 
   public Registration saveRegistration(Registration registration) {
     registration.setDate(LocalDate.now());
     registration.setTime(LocalTime.now());
+    ticketDetailsService.updateTicketCounts(registration.getEventId(),registration.getTicketCount());
     return repo.save(registration);
   }
 

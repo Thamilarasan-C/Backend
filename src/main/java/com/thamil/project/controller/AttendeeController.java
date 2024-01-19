@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.thamil.project.exception.CustomException;
 import com.thamil.project.model.Attendee;
-import com.thamil.project.model.Event;
 import com.thamil.project.service.AttendeeService;
 
 

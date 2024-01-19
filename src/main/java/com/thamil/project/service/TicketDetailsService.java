@@ -15,4 +15,7 @@ public class TicketDetailsService {
   public TicketDetails saveTicketDetails(TicketDetails ticketDetails) {
     return repo.save(ticketDetails);
   }
+  public void updateTicketCounts(Long eventId, int bookedTicketCount) {
+    repo.updateTicketCount(eventId,bookedTicketCount);
+  }
 }
