@@ -1,31 +1,56 @@
 package com.thamil.project.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.thamil.project.dto.LoginRequest;
+import com.thamil.project.dto.LoginResponse;
+import com.thamil.project.dto.SignUpRequest;
 import com.thamil.project.exception.CustomException;
 import com.thamil.project.model.User;
 import com.thamil.project.repository.UserRepo;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @Service
 public class UserService {
   @Autowired
   private UserRepo repo;
 
-  public User saveUser(User user) throws CustomException {
-    if (user.getEmailId() == null)
+  public String saveUser(SignUpRequest signUpRequest) throws CustomException {
+    if (signUpRequest.getEmailId() == null)
       throw new CustomException("Email Id must not be null");
-    if (user.getEmailId() != null && repo.existsByEmailId(user.getEmailId()))
+    if (signUpRequest.getEmailId() != null && repo.existsByEmailId(signUpRequest.getEmailId()))
       throw new CustomException("Email Id already registered");
-    return repo.save(user);
+    User user = User.builder()
+        .emailId(signUpRequest.getEmailId())
+        .name(signUpRequest.getName())
+        .password(signUpRequest.getPassword())
+        .role(signUpRequest.getRole())
+        .build();
+    repo.save(user);
+    return "Signed Up Successfully";
   }
 
-  public User updateUser(User user) throws CustomException {
-    if (user.getEmailId() == null)
-      throw new CustomException("Email Id must not be null");
-    if (repo.existsByEmailId(user.getEmailId()))
-      return repo.save(user);
-    throw new CustomException("No user found in this id");
+  public User validateUser(LoginRequest loginRequest) throws CustomException {
+    if (!repo.existsByName(loginRequest.getUserName()))
+      throw new CustomException("User name not found");
+    Optional<User> user = repo.findByName(loginRequest.getUserName());
+    if (loginRequest.getPassword().equals(user.get().getPassword()))
+      return user.get();
+    throw new CustomException("Incorrect Password");
   }
 
+  public LoginResponse generateToken(User user) {
+    Claims claims = Jwts.claims().setSubject(user.getName());
+    claims.put("role", user.getRole());
+    claims.put("userId", user.getId());
+    String token = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS256,
+        "ur97q2e7r2934892rnu213rn09217349782190348y12").compact();
+    return new LoginResponse(token);
+  }
 }

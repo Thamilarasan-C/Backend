@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.thamil.project.model.Attendee;
-import com.thamil.project.model.Event;
 
 @Repository
 public interface AttendeeRepo extends JpaRepository<Attendee, Long> {

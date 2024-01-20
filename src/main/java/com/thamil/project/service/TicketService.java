@@ -16,4 +16,8 @@ public class TicketService {
     return repo.save(ticket);
   }
 
+  public Ticket updateStatus(Long ticketId, boolean isPresent) {
+    return repo.updateStatus(ticketId,isPresent);
+  }
+
 }

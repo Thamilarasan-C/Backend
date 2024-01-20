@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thamil.project.exception.CustomException;
 import com.thamil.project.model.TicketDetails;
 import com.thamil.project.service.TicketDetailsService;
 
@@ -32,4 +33,9 @@ public class TicketDetailsController {
      return new ResponseEntity<>(t, HttpStatus.OK);
   }
   
+  @PostMapping("TicketDetails/{ticketDetailsId}")
+  public ResponseEntity<TicketDetails> getTicketDetails(@RequestBody Long ticketDetailsId) throws CustomException {
+    TicketDetails t = service.getTicketDetails(ticketDetailsId);
+     return new ResponseEntity<>(t, HttpStatus.OK);
+  }
 }

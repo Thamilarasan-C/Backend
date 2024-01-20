@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thamil.project.exception.CustomException;
 import com.thamil.project.model.Registration;
 import com.thamil.project.service.RegistrationService;
 
@@ -25,7 +26,7 @@ public class RegistrationController {
   private RegistrationService service;
 
   @PostMapping("addRegistration")
-  public ResponseEntity<Registration> insertRegistration(@RequestBody Registration registration) {
+  public ResponseEntity<Registration> insertRegistration(@RequestBody Registration registration) throws CustomException {
     Registration r = service.saveRegistration(registration);
     return new ResponseEntity<Registration>(r,HttpStatus.OK);
   }
