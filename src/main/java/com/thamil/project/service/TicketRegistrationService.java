@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.thamil.project.dto.AttendeeDto;
 import com.thamil.project.dto.TicketRegistration;
@@ -19,6 +20,7 @@ import com.thamil.project.repository.AttendeeRepo;
 import com.thamil.project.repository.TicketDetailsRepo;
 import com.thamil.project.repository.TicketRepo;
 
+@Service
 public class TicketRegistrationService {
 
   @Autowired
@@ -47,6 +49,7 @@ public class TicketRegistrationService {
         .eventId(ticketRegistration.getEventId())
         .ticketCount(ticketRegistration.getAttendees().size())
         .build();
+
     Long regId = registrationService.saveRegistration(registration).getRegistrationId();
 
     for (AttendeeDto currentAttendeeDto : ticketRegistration.getAttendees()) {
@@ -92,7 +95,7 @@ public class TicketRegistrationService {
         stringBuilder.append(randomChar);
       }
       randomString = stringBuilder.toString();
-    } while (!ticketRepo.existsByTicketToken(randomString));
+    } while (ticketRepo.existsByTicketToken(randomString));
     return randomString;
   }
 

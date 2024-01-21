@@ -33,7 +33,7 @@ public class Ticket {
   private Attendee attendee;
   private Long ticketDetailsId;
   @ManyToOne
-  @JoinColumn(name = "tickeDetailstId", insertable = false, updatable = false)
+  @JoinColumn(name = "ticketDetailsId", insertable = false, updatable = false)
   private TicketDetails ticketdetails;
   private boolean isAttended;
 }

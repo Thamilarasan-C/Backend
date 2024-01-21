@@ -3,6 +3,7 @@ package com.thamil.project.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.thamil.project.dto.LoginRequest;
@@ -21,27 +22,39 @@ public class UserService {
   @Autowired
   private UserRepo repo;
 
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
   public String saveUser(SignUpRequest signUpRequest) throws CustomException {
+
     if (signUpRequest.getEmailId() == null)
       throw new CustomException("Email Id must not be null");
+
     if (signUpRequest.getEmailId() != null && repo.existsByEmailId(signUpRequest.getEmailId()))
       throw new CustomException("Email Id already registered");
+
     User user = User.builder()
         .emailId(signUpRequest.getEmailId())
         .name(signUpRequest.getName())
-        .password(signUpRequest.getPassword())
+        .password(passwordEncoder.encode(signUpRequest.getPassword()))
         .role(signUpRequest.getRole())
         .build();
+
     repo.save(user);
+
     return "Signed Up Successfully";
   }
 
   public User validateUser(LoginRequest loginRequest) throws CustomException {
+
     if (!repo.existsByName(loginRequest.getUserName()))
       throw new CustomException("User name not found");
+
     Optional<User> user = repo.findByName(loginRequest.getUserName());
+
     if (loginRequest.getPassword().equals(user.get().getPassword()))
       return user.get();
+
     throw new CustomException("Incorrect Password");
   }
 

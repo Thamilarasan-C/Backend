@@ -26,8 +26,9 @@ public class EventInfoService {
   public String saveEvent(EventInfo eventInfo) {
     Event event = eventFromEventInfo(eventInfo);
     TicketDetails ticketDetails = ticketDetailsFromEventInfo(eventInfo);
-    ticketDetails.setEventId(event.getEventId());
-    eventRepo.save(event);
+    ticketDetails.setTicketsAvailable(eventInfo.getTotalTicketCount());
+    Event createdEvent = eventRepo.save(event);
+    ticketDetails.setEventId(createdEvent.getEventId());
     ticketDetailsRepo.save(ticketDetails);
     return "Event Successfuly added";
   }
@@ -39,7 +40,7 @@ public class EventInfoService {
         .description(eventInfo.getDescription())
         .venue(eventInfo.getVenue())
         .organizerId(eventInfo.getOrganizerId())
-        .status("Pending")
+        .status("upComing")
         .build();
   }
 
@@ -56,11 +57,12 @@ public class EventInfoService {
     for (Event event : events) {
 
       Optional<TicketDetails> ticketsDetail = ticketDetailsRepo.findByEventId(event.getEventId());
-      
+
       TicketDetails ticketDetails = ticketsDetail.get();
 
       EventInfo eventInfo = EventInfo.builder().eventName(event.getEventName()).date(event.getDate())
-          .description(event.getDescription()).totalTicketCount(ticketDetails.getTotalTicketCount()).ticketPrice(ticketDetails.getPrice()).venue(event.getVenue()).build();
+          .description(event.getDescription()).totalTicketCount(ticketDetails.getTotalTicketCount())
+          .ticketPrice(ticketDetails.getPrice()).venue(event.getVenue()).build();
 
       eventsInfo.add(eventInfo);
     }
@@ -73,13 +75,15 @@ public class EventInfoService {
 
     for (Event event : events) {
 
+      System.out.println("Event id: " + event.getEventId());
+
       Optional<TicketDetails> ticketsDetail = ticketDetailsRepo.findByEventId(event.getEventId());
-      
+
       TicketDetails ticketDetails = ticketsDetail.get();
 
       EventPoster eventPoster = EventPoster.builder()
-      .eventName(event.getEventName())
-      .date(event.getDate())
+          .eventName(event.getEventName())
+          .date(event.getDate())
           .description(event.getDescription())
           .ticketsAvailable(ticketDetails.getTicketsAvailable())
           .ticketPrice(ticketDetails.getPrice())
