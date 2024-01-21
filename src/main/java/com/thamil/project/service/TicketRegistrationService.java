@@ -98,5 +98,4 @@ public class TicketRegistrationService {
     } while (ticketRepo.existsByTicketToken(randomString));
     return randomString;
   }
-
 }

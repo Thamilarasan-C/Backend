@@ -22,12 +22,12 @@ public class UserController {
   private UserService service;
 
   @PostMapping("/signUp")
-  public ResponseEntity<String> insertUser(@RequestBody SignUpRequest signUpRequest) throws CustomException {
-    return new ResponseEntity<>(service.saveUser(signUpRequest), HttpStatus.OK);
+  public ResponseEntity<LoginResponse> insertUser(@RequestBody SignUpRequest signUpRequest) throws CustomException {
+    return new ResponseEntity<LoginResponse>(service.saveUser(signUpRequest), HttpStatus.OK);
   }
 
   @PostMapping("/login")
-  public LoginResponse login(@RequestBody LoginRequest loginRequest) throws CustomException {
-    return service.generateToken(service.validateUser(loginRequest));
+  public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) throws CustomException {
+    return new ResponseEntity<LoginResponse>(service.validateUser(loginRequest),HttpStatus.OK);
 }
 }

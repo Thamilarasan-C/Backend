@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(InternalError.class)
   public ResponseEntity<String> handleException(Exception e) {
-    return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+    return new ResponseEntity<>("Internal server error", HttpStatus.NOT_FOUND);
   }
 
 }

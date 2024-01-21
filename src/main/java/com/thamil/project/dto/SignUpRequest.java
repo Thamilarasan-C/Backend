@@ -1,5 +1,7 @@
 package com.thamil.project.dto;
 
+import com.thamil.project.model.Role;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

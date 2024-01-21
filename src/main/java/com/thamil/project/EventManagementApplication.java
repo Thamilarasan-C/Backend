@@ -41,6 +41,7 @@ public class EventManagementApplication {
 // ,venue , ticketcount , ticketprice(may be we can add list of ticketdetails)
 // send event details to eventable and ticket details to ticket table
 
+// create api which will allow all and they can see the happening events and can enter with token given to them
 //create interfaces
 
 // @Override
