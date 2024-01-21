@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TicketToken {
   String attendeeName;
+  String attendeeEmailId;
   String ticketToken;
 }

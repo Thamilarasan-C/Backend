@@ -22,6 +22,7 @@ public class Ticket {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long ticketId;
+  private String ticketToken;
   private Long registrationId;
   @ManyToOne
   @JoinColumn(name = "registrationId", insertable = false, updatable = false)

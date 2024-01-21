@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.thamil.project.dto.TicketRegistration;
 import com.thamil.project.dto.TicketToken;
+import com.thamil.project.exception.CustomException;
 import com.thamil.project.service.TicketRegistrationService;
 
 @RestController
@@ -22,7 +23,7 @@ public class TicketRegistrationController {
   private TicketRegistrationService service;
 
   @PostMapping("/saveRegistration")
-  public ResponseEntity<List<TicketToken>> insertUser(@RequestBody TicketRegistration ticketRegistration) {
-    return new ResponseEntity<String>(service.saveTicketRegistration(ticketRegistration), HttpStatus.OK);
+  public ResponseEntity<List<TicketToken>> insertUser(@RequestBody TicketRegistration ticketRegistration) throws CustomException{
+    return new ResponseEntity<List<TicketToken>>(service.saveTicketRegistration(ticketRegistration), HttpStatus.OK);
   }
 }

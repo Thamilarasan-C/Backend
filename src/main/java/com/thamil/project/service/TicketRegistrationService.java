@@ -1,5 +1,6 @@
 package com.thamil.project.service;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import com.thamil.project.model.Ticket;
 import com.thamil.project.model.TicketDetails;
 import com.thamil.project.repository.AttendeeRepo;
 import com.thamil.project.repository.TicketDetailsRepo;
+import com.thamil.project.repository.TicketRepo;
 
 public class TicketRegistrationService {
 
@@ -27,6 +29,14 @@ public class TicketRegistrationService {
 
   @Autowired
   private TicketDetailsRepo ticketDetailsRepo;
+
+  @Autowired
+  private TicketRepo ticketRepo;
+
+  private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  private static final int STRING_LENGTH = 10;
+
+  private static final SecureRandom random = new SecureRandom();
 
   public List<TicketToken> saveTicketRegistration(TicketRegistration ticketRegistration) throws CustomException {
 
@@ -43,19 +53,22 @@ public class TicketRegistrationService {
       Long attendeeId;
       if (!attendeeRepo.existsByEmailId(currentAttendeeDto.getEmailId()))
         attendeeId = attendeeRepo.save(attendeeFromDto(currentAttendeeDto)).getAttendeeId();
-      else{
+      else {
         attendeeId = attendeeRepo.findByEmailId(currentAttendeeDto.getEmailId()).get().getAttendeeId();
       }
-      Optional<TicketDetails> ticketDetails= ticketDetailsRepo.findByEventId(ticketRegistration.getEventId());
+      Optional<TicketDetails> ticketDetails = ticketDetailsRepo.findByEventId(ticketRegistration.getEventId());
       Long ticketDetailsId = ticketDetails.get().getTicketDetailsId();
+      String ticketTokenString = generateUniqueTicketToken();
       Ticket ticket = Ticket.builder()
-        .registrationId(regId)
-        .attendeeId(attendeeId)
-        .ticketDetailsId(ticketDetailsId)
-        .isAttended(false)
-        .build();
-        //generate ticket tokens
-        //ticketTokens.add(new TicketToken(attendeeName,generatedToken))
+          .registrationId(regId)
+          .attendeeId(attendeeId)
+          .ticketToken(ticketTokenString)
+          .ticketDetailsId(ticketDetailsId)
+          .isAttended(false)
+          .build();
+      ticketRepo.save(ticket);
+      ticketTokens
+          .add(new TicketToken(currentAttendeeDto.getName(), currentAttendeeDto.getEmailId(), ticketTokenString));
     }
     return ticketTokens;
   }
@@ -68,4 +81,19 @@ public class TicketRegistrationService {
         .dob(attendeeDto.getDob())
         .build();
   }
+
+  private String generateUniqueTicketToken() {
+    String randomString;
+    do {
+      StringBuilder stringBuilder = new StringBuilder(STRING_LENGTH);
+      for (int i = 0; i < STRING_LENGTH; i++) {
+        int randomIndex = random.nextInt(CHARACTERS.length());
+        char randomChar = CHARACTERS.charAt(randomIndex);
+        stringBuilder.append(randomChar);
+      }
+      randomString = stringBuilder.toString();
+    } while (!ticketRepo.existsByTicketToken(randomString));
+    return randomString;
+  }
+
 }
