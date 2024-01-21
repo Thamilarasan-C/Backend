@@ -11,9 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AttendeeDto {
-  private String emailId;
-  private String name;
-  private String gender;
-  private LocalDate dob;
+public class EventPoster {
+  private String eventName;
+  private LocalDate date;
+  private String description;
+  private String venue;
+  private int ticketsAvailable;
+  private int ticketPrice;
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thamil.project.dto.EventInfo;
+import com.thamil.project.dto.EventPoster;
 import com.thamil.project.model.Event;
 import com.thamil.project.model.TicketDetails;
 import com.thamil.project.repository.EventRepo;
@@ -54,16 +55,37 @@ public class EventInfoService {
     List<Event> events = eventRepo.findAll();
     for (Event event : events) {
 
-      System.out.println(event.getEventName());
       Optional<TicketDetails> ticketsDetail = ticketDetailsRepo.findByEventId(event.getEventId());
       
       TicketDetails ticketDetails = ticketsDetail.get();
 
       EventInfo eventInfo = EventInfo.builder().eventName(event.getEventName()).date(event.getDate())
-          .description(event.getDescription()).ticketPrice(ticketDetails.getPrice()).venue(event.getVenue()).build();
+          .description(event.getDescription()).totalTicketCount(ticketDetails.getTotalTicketCount()).ticketPrice(ticketDetails.getPrice()).venue(event.getVenue()).build();
 
       eventsInfo.add(eventInfo);
     }
     return eventsInfo;
+  }
+
+  public List<EventPoster> getEventsInfo(String status) {
+    List<EventPoster> eventPosters = new ArrayList<EventPoster>();
+    List<Event> events = eventRepo.getEvents(status);
+
+    for (Event event : events) {
+
+      Optional<TicketDetails> ticketsDetail = ticketDetailsRepo.findByEventId(event.getEventId());
+      
+      TicketDetails ticketDetails = ticketsDetail.get();
+
+      EventPoster eventPoster = EventPoster.builder()
+      .eventName(event.getEventName())
+      .date(event.getDate())
+          .description(event.getDescription())
+          .ticketsAvailable(ticketDetails.getTicketsAvailable())
+          .ticketPrice(ticketDetails.getPrice())
+          .venue(event.getVenue()).build();
+      eventPosters.add(eventPoster);
+    }
+    return eventPosters;
   }
 }
