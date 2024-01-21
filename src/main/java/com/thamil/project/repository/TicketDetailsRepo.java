@@ -1,5 +1,7 @@
 package com.thamil.project.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,4 +13,6 @@ import com.thamil.project.model.TicketDetails;
 public interface TicketDetailsRepo extends JpaRepository<TicketDetails,Long> {
   @Query("UPDATE TicketDetails t SET t.ticketsAvailable = t.ticketsAvailable - :bookedTicketCount WHERE t.eventId = :eventId")
   void updateTicketCount(@Param("eventId") Long eventId , @Param("bookedTicketCount") int availableTicketCount);
+
+  Optional<TicketDetails> findByEventId(Long eventId);
 }

@@ -23,8 +23,6 @@ public class RegistrationService {
   public Registration saveRegistration(Registration registration) throws CustomException {
     registration.setDate(LocalDate.now());
     registration.setTime(LocalTime.now());
-    if(registration.getTicketCount()>5)
-    throw new CustomException("Users can only register upto 5 attendees per registration");
     ticketDetailsService.updateTicketCounts(registration.getEventId(),registration.getTicketCount());
     return repo.save(registration);
   }
